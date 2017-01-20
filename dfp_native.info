@@ -1,0 +1,6 @@
+name = DFP Native
+description = Integration with DFP Native
+package = Advertising
+core = 7.x
+dependencies[] = context
+dependencies[] = dfp

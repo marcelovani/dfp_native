@@ -1,0 +1,107 @@
+<?php
+/**
+ * @file
+ * Main module file.
+ */
+
+/**
+ * Implements hook_context_registry().
+ */
+function dfp_native_context_registry() {
+  return array(
+    'reactions' => array(
+      'dfp_native' => array(
+        'title' => t('DFP native'),
+        'plugin' => 'dfp_native_context_reaction',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_context_plugins().
+ */
+function dfp_native_context_plugins() {
+  $plugins = array();
+  $plugins['dfp_native_context_reaction'] = array(
+    'handler' => array(
+      'path' => drupal_get_path('module', 'dfp_native') . '/plugins',
+      'file' => 'dfp_native_context_reaction.inc',
+      'class' => 'DFPNativeContextReaction',
+      'parent' => 'context_condition',
+    ),
+  );
+  return $plugins;
+}
+
+/**
+ * Implements hook_page_build().
+ *
+ * Loop through each available adslot, Get all needed settings
+ * and add it to the JavaScript which will appended
+ * the rendered dfp tag in specified location.
+ * All the visibility rules should be controlled by the context.
+ */
+function dfp_native_page_build(&$page) {
+
+  // Check for parent module configurations.
+  if (path_is_admin(current_path()) || !variable_get('dfp_native_enabled')) {
+    return;
+  }
+
+  // Execute dfp_native plugin.
+  if ($plugin = context_get_plugin('reaction', 'dfp_native')) {
+    $plugin->execute();
+
+    if (!empty($plugin->dfp_native_tags)) {
+      $dfp_native_tags = array();
+      foreach ($plugin->dfp_native_tags as $machinename => $values) {
+        // Just one value is not required (position). So, check for values.
+        if (count(array_filter($values)) < count($values) - 1) {
+          continue;
+        }
+
+        // Explode selector CSV into array.
+        if (!empty($values['selector'])) {
+          $values['selector'] = explode(PHP_EOL, $values['selector']);
+        }
+
+        // Load the DFP tag.
+        $tag = dfp_tag_load($values['ad_tag']);
+
+        if (empty($tag->disabled) && !empty($tag->targeting)) {
+          $dfp_tag = dfp_tag($values['ad_tag']);
+          $dfp_native_tags[$machinename] = $values;
+          $dfp_native_tags[$machinename]['targeting'] = $tag->targeting;
+          // Render the tag.
+          $dfp_native_tags[$machinename]['renderedDfp'] = render($dfp_tag);
+        }
+      }
+
+      // Allow modules to alter the configuration object.
+      drupal_alter('dfp_native_tags', $dfp_native_tags);
+
+      // Add the javascript.
+      _dfp_native_add_js($dfp_native_tags);
+    }
+  }
+}
+
+/**
+ * Helper to add the javascript code for DFP Native.
+ */
+function _dfp_native_add_js($tags) {
+
+  if (empty($tags)) {
+    return;
+  }
+
+  // Add collected JS configuration.
+  drupal_add_js(array(
+    'dfpNative' => array(
+      'tags' => $tags,
+    ),
+  ), 'setting');
+
+  drupal_add_js(drupal_get_path('module', 'dfp_native') . '/js/dfp_native.js');
+}
