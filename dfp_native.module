@@ -43,9 +43,8 @@ function dfp_native_context_plugins() {
  * All the visibility rules should be controlled by the context.
  */
 function dfp_native_page_build(&$page) {
-
   // Check for parent module configurations.
-  if (path_is_admin(current_path()) || !variable_get('dfp_native_enabled')) {
+  if (path_is_admin(current_path())) {
     return;
   }
 
@@ -91,7 +90,6 @@ function dfp_native_page_build(&$page) {
  * Helper to add the javascript code for DFP Native.
  */
 function _dfp_native_add_js($tags) {
-
   if (empty($tags)) {
     return;
   }
