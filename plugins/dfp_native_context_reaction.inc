@@ -57,11 +57,21 @@ class DFPNativeContextReaction extends context_reaction {
       '#default_value' => isset($values['selector']) ? $values['selector'] : '',
     );
     $form['values']['position'] = array(
-      '#title' => t('Position (optional)'),
-      '#description' => t('This determines the position within the selector where you wish to place the ad unit. If you want an ad to appear in the 3rd position this selector occurs (the 3rd child), add 3 or leave empty if you want it to be the first element.'),
+      '#title' => t('Position'),
+      '#description' => t('This determines the position within the selector where you wish to place the ad unit. If you want an ad to appear after the third child add 3 or leave i empty if you want it to be the first element.'),
       '#type' => 'textfield',
       '#size' => 10,
       '#default_value' => isset($values['position']) ? $values['position'] : '',
+    );
+    $form['values']['placement'] = array(
+      '#title' => t('Placement'),
+      '#description' => t('This determins how the ad slot should be placed. By default this will be inserted as indicated by the selector & position, pushing all other children down, but it is also possible to replace the element indicated by the selector & position.'),
+      '#type' => 'select',
+      '#options' => array(
+        'insert' => t('Insert'),
+        'replace' => t('Replace'),
+      ),
+      '#default_value' => isset($values['placement']) ? $values['placement'] : 'insert',
     );
 
     return $form;

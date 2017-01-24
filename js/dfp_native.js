@@ -11,11 +11,19 @@
                     $.each(tags, function (index, item) {
                         // Turn the position into a zero-based index position.
                         position = (item.position != undefined && item.position > 0 ? item.position : 1) -1;
+                        placement = item.placement != undefined && item.placement === 'replace' ? item.placement : 'insert';
                         // Loop through each selector: if a match found, render dfp and break loop.
                         $.each(item.selector, function (index, itemValue) {
                             if($(itemValue).eq(position).length == 1) {
-                                $(itemValue).eq(position).before(item.renderedDfp);
-                                return false;
+                                console.log(placement);
+                                if (placement === 'replace') {
+                                    $(itemValue).eq(position).replaceWith(item.renderedDfp);
+                                    return false;
+                                }
+                                else {
+                                    $(itemValue).eq(position).before(item.renderedDfp);
+                                    return false;
+                                }
                             }
                         });
                     });
