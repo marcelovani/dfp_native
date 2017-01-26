@@ -106,9 +106,7 @@ function dfp_native_dfp_native_tag_alter(&$render_array, $context) {
 
   // Add classes to identify targetting.
   foreach ($tag->targeting as $target) {
-    foreach ($target as $k => $v) {
-      $render_array['dfp_wrapper']['#attributes']['class'][] = 'dfp-slot-target-' . $k . '-' . $v;
-    }
+    $render_array['dfp_wrapper']['#attributes']['class'][] = 'dfp-slot-target-' . $target['target'] . '-' . $target['value'];
   }
 
   // Add classes to identify size.
