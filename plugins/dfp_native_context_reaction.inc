@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Context reaction plugin for DFP Respond.
+ * Context reaction plugin for DFP Native.
  */
 
 /**
