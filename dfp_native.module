@@ -70,6 +70,13 @@ function dfp_native_page_build(&$page) {
 
         if (empty($tag->disabled) && !empty($tag->targeting)) {
           $dfp_tag = dfp_tag($values['ad_tag']);
+
+          // Alter the render array for native tags.
+          $context = array(
+            'tag' => clone $tag,
+          );
+          drupal_alter('dfp_native_tag', $dfp_tag, $context);
+
           $dfp_native_tags[$machinename] = $values;
           $dfp_native_tags[$machinename]['targeting'] = $tag->targeting;
           // Render the tag.
@@ -84,6 +91,28 @@ function dfp_native_page_build(&$page) {
       _dfp_native_add_js($dfp_native_tags);
     }
   }
+}
+
+/**
+ * Implements hook_TYPE_alter().
+ *
+ * Adds classes to the dfp tag wrapper.
+ */
+function dfp_native_dfp_native_tag_alter(&$render_array, $context) {
+  $tag = $context['tag'];
+
+  // Add a generic tag to identify native tags.
+  $render_array['dfp_wrapper']['#attributes']['class'][] = 'dfp-native-tag';
+
+  // Add classes to identify targetting.
+  foreach ($tag->targeting as $target) {
+    foreach ($target as $k => $v) {
+      $render_array['dfp_wrapper']['#attributes']['class'][] = 'dfp-slot-target-' . $k . '-' . $v;
+    }
+  }
+
+  // Add classes to identify size.
+  $render_array['dfp_wrapper']['#attributes']['class'][] = 'dfp-slot-size-' . $tag->raw->size;
 }
 
 /**
