@@ -14,16 +14,20 @@
                         placement = item.placement != undefined && item.placement === 'replace' ? item.placement : 'insert';
                         // Loop through each selector: if a match found, render dfp and break loop.
                         $.each(item.selector, function (index, itemValue) {
-                            if($(itemValue).eq(position).length == 1) {
-                                console.log(placement);
-                                if (placement === 'replace') {
+                            if (placement === 'replace') {
+                                if ($(itemValue).eq(position).length == 1) {
                                     $(itemValue).eq(position).replaceWith(item.renderedDfp);
-                                    return false;
                                 }
-                                else {
+                                return false;
+                            }
+                            else {
+                                if ($(itemValue).eq(position).length == 1) {
                                     $(itemValue).eq(position).before(item.renderedDfp);
-                                    return false;
                                 }
+                                else if ($(itemValue).eq(position-1).length == 1) {
+                                    $(itemValue).eq(position-1).after(item.renderedDfp);
+                                }
+                                return false;
                             }
                         });
                     });
