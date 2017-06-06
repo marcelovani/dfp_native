@@ -10,8 +10,8 @@
                 appendDfp: function (tags) {
                     $.each(tags, function (index, item) {
                         // Turn the position into a zero-based index position.
-                        position = (item.position != undefined && item.position > 0 ? item.position : 1) -1;
-                        placement = item.placement != undefined && item.placement === 'replace' ? item.placement : 'insert';
+                        var position = (item.position != undefined && item.position > 0 ? item.position : 1) -1;
+                        var placement = item.placement != undefined && item.placement === 'replace' ? item.placement : 'insert';
                         // Loop through each selector: if a match found, render dfp and break loop.
                         $.each(item.selector, function (index, itemValue) {
                             if (placement === 'replace') {
