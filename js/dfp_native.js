@@ -16,7 +16,18 @@
                         $.each(item.selector, function (index, itemValue) {
                             if (placement === 'replace') {
                                 if ($(itemValue).eq(position).length == 1) {
-                                    $(itemValue).eq(position).replaceWith(item.renderedDfp);
+                                    // Adding event listener, So its available when ads is rendered/loaded
+                                    googletag.cmd.push(function() {
+                                        googletag.pubads().addEventListener('slotRenderEnded', function(e) {
+                                            // Hide selectors element
+                                            if ((e.slot === googletag.slots[item.ad_tag]) && (e.size[1] > 0)) {
+                                                $(itemValue).eq(position).hide();
+                                            }
+                                        });
+                                    });
+
+                                    // Render the advert so that the slotRenderEnded event is fired.
+                                    $(itemValue).eq(position).before(item.renderedDfp);
                                 }
                                 return false;
                             }
