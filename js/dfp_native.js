@@ -21,7 +21,7 @@
                                         googletag.pubads().addEventListener('slotRenderEnded', function(e) {
                                             // Hide selectors element
                                             if ((e.slot === googletag.slots[item.ad_tag]) && (e.size[1] > 0)) {
-                                                $(document.body).addClass('native-ad-loaded');
+                                                $(itemValue).eq(position).hide();
                                             }
                                         });
                                     });
