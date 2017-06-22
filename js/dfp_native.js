@@ -22,7 +22,9 @@
                                         googletag.pubads().addEventListener('slotRenderEnded', function(e) {
                                             // Hide selectors element
                                             if ((e.slot === googletag.slots[item.ad_tag]) && (e.size[1] > 0)) {
+                                                // Hide the next view item
                                                 $(itemValue).eq(position).hide();
+                                                // Apply a specific and generic class to the body if Native Ad is loaded
                                                 $(document.body).addClass('dfpnative ' + item.ad_tag);
                                             }
                                         });
@@ -40,6 +42,7 @@
                                         googletag.pubads().addEventListener('slotRenderEnded', function(e) {
                                             // Hide selectors element
                                             if ((e.slot === googletag.slots[item.ad_tag]) && (e.size[1] > 0)) {
+                                                // Apply a specific and generic class to the body if Native Ad is loaded
                                                 $(document.body).addClass('dfpnative ' + item.ad_tag);
                                             }
                                         });
