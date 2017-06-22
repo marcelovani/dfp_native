@@ -15,35 +15,19 @@
                         // Loop through each selector: if a match found, render dfp and break loop.
                         $.each(item.selector, function (index, itemValue) {
 
-                            if (placement === 'replace') {
+                            if (placement === 'replace' || placement === 'insert') {
                                 if ($(itemValue).eq(position).length == 1) {
                                     // Adding event listener, So its available when ads is rendered/loaded
                                     googletag.cmd.push(function() {
                                         googletag.pubads().addEventListener('slotRenderEnded', function(e) {
                                             // Hide selectors element
                                             if ((e.slot === googletag.slots[item.ad_tag]) && (e.size[1] > 0)) {
+                                                // Apply a specific and generic class to the body if Native Ad is loaded
+                                                $(document.body).addClass(item.ad_tag + '-enabled');
                                                 // Hide the next view item
-                                                $(itemValue).eq(position).hide();
-                                                // Apply a specific and generic class to the body if Native Ad is loaded
-                                                $(document.body).addClass('dfpnative ' + item.ad_tag);
-                                            }
-                                        });
-                                    });
-
-                                    // Render the advert so that the slotRenderEnded event is fired.
-                                    $(itemValue).eq(position).before(item.renderedDfp);
-                                }
-                                return false;
-                            }
-                            else if (placement === 'insert') {
-                                if ($(itemValue).eq(position).length == 1) {
-                                    // Adding event listener, So its available when ads is rendered/loaded
-                                    googletag.cmd.push(function() {
-                                        googletag.pubads().addEventListener('slotRenderEnded', function(e) {
-                                            // Hide selectors element
-                                            if ((e.slot === googletag.slots[item.ad_tag]) && (e.size[1] > 0)) {
-                                                // Apply a specific and generic class to the body if Native Ad is loaded
-                                                $(document.body).addClass('dfpnative ' + item.ad_tag);
+                                                if (placement === 'replace') {
+                                                    $(itemValue).eq(position).hide();
+                                                }
                                             }
                                         });
                                     });
